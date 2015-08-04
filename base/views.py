@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 def index(request):
     """
-    Контроллер главной страницы
+    Front page
     :param request:
     :return: HttpResponse
     """
