@@ -12,9 +12,9 @@ class Base:
         """
         Set rating value
 
-        :param model_type: basestring
-        :param model_id: int
-        :param value: float
+        :type model_type: str
+        :type model_id: int
+        :type value: float
         :return: None
         """
 
@@ -23,8 +23,8 @@ class Base:
         """
         Get rating value
 
-        :param model_type: basestring
-        :param model_id: int
+        :type model_type: str
+        :type model_id: int
         :return: int
         """
 
@@ -33,8 +33,8 @@ class Base:
         """
         Increment rating value
 
-        :param model_type: basestring
-        :param model_id: int
+        :type model_type: str
+        :type model_id: int
         :return: None
         """
 
@@ -43,8 +43,8 @@ class Base:
         """
         Decrement rating value
 
-        :param model_type: basestring
-        :param model_id: int
+        :type model_type: str
+        :type model_id: int
         :return: None
         """
 
@@ -53,16 +53,50 @@ class Base:
         """
         Get rating list of specific collection (model_type)
 
-        :param model_type: basestring
-        :param limit: int
-        :param offset: int
+        :type model_type: str
+        :type limit: int
+        :type offset: int
         :return: OrderedDict in {id:rating} format
         """
 
-    def _get_key(self, model_type):
+    @abstractmethod
+    def soft_delete(self, model_type, model_id):
+        """
+        Delete item rating, but save it to another place to can be restored in future
+
+        :type model_type: str
+        :type model_id: int
+        :return: None
+        """
+
+    @abstractmethod
+    def restore(self, model_type, model_id):
+        """
+        Restore item rating
+
+        :type model_type: str
+        :type model_id: int
+        :return: None
+        """
+
+    @staticmethod
+    def _get_key(model_type, deleted_list=False):
         """
         Return prefixed unique key for rate item
-        :param model_type: int
-        :return: basestring
+        :type model_type: int
+        :return: str
         """
-        return "rating_{0}" % {model_type}
+        prefix = ""
+        if deleted_list:
+            prefix = "deleted_"
+        return "rating_{0}{1}" % {prefix, model_type}
+
+    @abstractmethod
+    def toggle_state(self, model_type, model_id, future_state):
+        """
+        Change rating state
+        :type model_type: str
+        :type model_id: int
+        :type future_state: bool
+        :return:
+        """
