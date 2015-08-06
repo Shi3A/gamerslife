@@ -1,1 +1,2 @@
+redis
 Django>=1.8
